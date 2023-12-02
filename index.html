@@ -84,7 +84,9 @@
 			.poppins-font {
 				font-family: 'Poppins', sans-serif;
 			}
-
+            .container {
+                padding-bottom: 60px; /* Atur sesuai dengan kebutuhan */
+            }
 			footer {
 				padding: 5px 0;
 				background-color: #f8f9fa;
@@ -110,8 +112,11 @@
 			<div id="canvasContainer">
 				<canvas id="canvas"></canvas>
 			</div>
+            <div class="text-center mt-3">
+                <button class="btn btn-secondary" id="toggleBnW">Black & White</button>
+            </div>
 			<div class="container mt-5">
-				<div class="controls-container">
+				<div class="controls-container">               
 					<div class="slider-container">
 						<label for="zoomControl">Zoom:</label>
 						<input type="range" id="zoomControl" min="0.1" max="2" value="1" step="0.1">
@@ -146,6 +151,7 @@
 		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 		<script>
+            let isBlackAndWhite = false;
 			let canvas = document.getElementById('canvas');
 			let ctx = canvas.getContext('2d');
 			let image = new Image();
@@ -201,23 +207,37 @@
 			}
 
 			function draw() {
-				let iw = image.width;
-				let ih = image.height;
-				let cw = canvas.width;
-				let ch = canvas.height;
-				let scaleFactor = Math.min(cw / iw, ch / ih);
-				let iwScaled = iw * scaleFactor * scale;
-				let ihScaled = ih * scaleFactor * scale;
-				ctx.clearRect(0, 0, cw, ch);
-				ctx.save();
-				ctx.translate(cw / 2, ch / 2);
-				ctx.scale(scaleFactor * scale, scaleFactor * scale);
-				ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), -ih / 2 + position.y / (scaleFactor * scale));
-				ctx.drawImage(image, 0, 0);
-				ctx.restore();
-				ctx.drawImage(twibbon, 0, 0, cw, ch);
-			}
+                let iw = image.width;
+                let ih = image.height;
+                let cw = canvas.width;
+                let ch = canvas.height;
+                let scaleFactor = Math.min(cw / iw, ch / ih);
+                ctx.clearRect(0, 0, cw, ch);
+                ctx.save();
+                ctx.translate(cw / 2, ch / 2);
+                ctx.scale(scaleFactor * scale, scaleFactor * scale);
+                ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), -ih / 2 + position.y / (scaleFactor * scale));
+                ctx.drawImage(image, 0, 0);
+                ctx.restore();
+                ctx.drawImage(twibbon, 0, 0, cw, ch);
 
+                if (isBlackAndWhite) {
+                    applyBlackAndWhiteFilter(ctx, cw, ch);
+                }
+            }
+            function applyBlackAndWhiteFilter(ctx, width, height) {
+                let imageData = ctx.getImageData(0, 0, width, height);
+                let data = imageData.data;
+
+                for (let i = 0; i < data.length; i += 4) {
+                    let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                    data[i] = avg; // red
+                    data[i + 1] = avg; // green
+                    data[i + 2] = avg; // blue
+                }
+
+                ctx.putImageData(imageData, 0, 0);
+            }
 			function resizeCanvas() {
 				canvas.width = $('#canvasContainer').width();
 				canvas.height = canvas.width;
@@ -246,10 +266,10 @@
 				dragStart = null;
 			}, false);
 			document.getElementById('saveImage').addEventListener('click', function() {
-				let hiddenCanvas = document.createElement('canvas');
-				hiddenCanvas.width = 1080; // Width of the output image
-				hiddenCanvas.height = 1080; // Height of the output image
-				let hiddenCtx = hiddenCanvas.getContext('2d');
+                let hiddenCanvas = document.createElement('canvas');
+                hiddenCanvas.width = 1080;
+                hiddenCanvas.height = 1080;
+                let hiddenCtx = hiddenCanvas.getContext('2d');
 				// Adjust the scale to fit the twibbon size
 				let scaleFactor = Math.min(hiddenCanvas.width / image.width, hiddenCanvas.height / image.height);
 				// Draw the image and twibbon on the hidden canvas
@@ -260,6 +280,10 @@
 				hiddenCtx.drawImage(image, 0, 0);
 				hiddenCtx.restore();
 				hiddenCtx.drawImage(twibbon, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+
+                if (isBlackAndWhite) {
+                    applyBlackAndWhiteFilter(hiddenCtx, hiddenCanvas.width, hiddenCanvas.height);
+                }
 				// Create the data URL and download
 				let dataURL = hiddenCanvas.toDataURL('image/png');
 				let link = document.createElement('a');
@@ -269,6 +293,10 @@
 			});
 			$(window).resize(resizeCanvas);
 			resizeCanvas();
+            document.getElementById('toggleBnW').addEventListener('click', function() {
+                isBlackAndWhite = !isBlackAndWhite;
+                draw();
+            });
 		</script>
 	</body>
 </html>
