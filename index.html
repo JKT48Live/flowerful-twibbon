@@ -34,6 +34,11 @@
 				position: relative;
 				overflow: hidden;
 			}
+            .custom-file-container {
+                width: fit-content; /* Buat lebar menyesuaikan konten */
+                margin-left: auto; /* Margin kiri dan kanan auto untuk pemusatan */
+                margin-right: auto;
+            }
 
 			canvas {
 				width: 100%;
@@ -87,6 +92,19 @@
             .container {
                 padding-bottom: 60px; /* Atur sesuai dengan kebutuhan */
             }
+            .checkbox-container {
+                border: 2px solid #ddd;
+                border-radius: 10px;
+                padding: 10px;
+                margin-top: 20px;
+                width: fit-content; /* Buat kotak menyesuaikan konten */
+                display: inline-block;
+                margin-left: auto; /* Margin kiri dan kanan auto untuk pemusatan */
+                margin-right: auto;
+            }
+            .form-check {
+                margin: 0 10px; /* Kurangi margin horizontal */
+            }
 			footer {
 				padding: 5px 0;
 				background-color: #f8f9fa;
@@ -105,36 +123,50 @@
 	<body class="poppins-font">
 		<div class="container mt-5">
 			<h2 class="mb-4 text-center">JKT48 Flowerful Twibbon</h2>
-			<div class="custom-file mb-3">
-				<input type="file" class="custom-file-input" id="imageUpload" accept="image/*">
-				<label class="custom-file-label" for="imageUpload">Pilih foto...</label>
-			</div>
+			<div class="custom-file-container">
+                <div class="custom-file mb-3">
+                  <input type="file" class="custom-file-input" id="imageUpload" accept="image/*">
+                  <label class="custom-file-label" for="imageUpload">Pilih foto...</label>
+                </div>
+            </div>              
 			<div id="canvasContainer">
 				<canvas id="canvas"></canvas>
 			</div>
-            <div class="text-center mt-3">
-                <button class="btn btn-secondary" id="toggleBnW">Black & White</button>
+            <div class="d-flex justify-content-center">
+                <div class="checkbox-container text-center">
+                  <p>Black & White</p>
+                  <div class="d-flex justify-content-center">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="photoBnW" disabled>
+                        <label class="form-check-label" for="photoBnW">Foto</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="twibbonBnW">
+                        <label class="form-check-label" for="twibbonBnW">Twibbon</label>
+                    </div>
+                  </div>
+                </div>
             </div>
 			<div class="container mt-5">
 				<div class="controls-container">               
 					<div class="slider-container">
 						<label for="zoomControl">Zoom:</label>
-						<input type="range" id="zoomControl" min="0.1" max="2" value="1" step="0.1">
+						<input type="range" id="zoomControl" min="0.1" max="2" value="1" step="0.1" disabled>
 					</div>
 					<div class="joystick-container">
 						<div class="joystick-row">
 							<div class="joystick-spacer"></div>
-							<button id="moveUp" class="btn btn-primary">↑</button>
+							<button id="moveUp" class="btn btn-primary" disabled>↑</button>
 							<div class="joystick-spacer"></div>
 						</div>
 						<div class="joystick-row">
-							<button id="moveLeft" class="btn btn-primary">←</button>
+							<button id="moveLeft" class="btn btn-primary" disabled>←</button>
 							<div class="joystick-spacer"></div>
-							<button id="moveRight" class="btn btn-primary">→</button>
+							<button id="moveRight" class="btn btn-primary" disabled>→</button>
 						</div>
 						<div class="joystick-row">
 							<div class="joystick-spacer"></div>
-							<button id="moveDown" class="btn btn-primary">↓</button>
+							<button id="moveDown" class="btn btn-primary" disabled>↓</button>
 							<div class="joystick-spacer"></div>
 						</div>
 					</div>
@@ -142,7 +174,7 @@
 				<!-- Other content goes here... -->
 			</div>
 			<div class="text-center">
-				<button class="btn btn-primary" id="saveImage">Download</button>
+				<button class="btn btn-primary" id="saveImage" disabled>Download</button>
 			</div>
 		</div>
 		<footer class="text-center mt-4">
@@ -184,19 +216,29 @@
 				draw();
 			};
 			$('#imageUpload').change(function(e) {
-				let file = e.target.files[0];
-				if (file) {
-					let reader = new FileReader();
-					reader.onload = function(event) {
-						image.src = event.target.result;
-						image.onload = function() {
-							reset();
-							draw();
-						}
-					};
-					reader.readAsDataURL(file);
-				}
-			});
+                let file = e.target.files[0];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function(event) {
+                    image.src = event.target.result;
+                    image.onload = function() {
+                        reset();
+                        draw();
+                        // Aktifkan checkbox dan tombol download setelah foto diupload
+                        document.getElementById('photoBnW').disabled = false;
+                        document.getElementById('twibbonBnW').disabled = false;
+                        document.getElementById('saveImage').disabled = false;
+
+                        document.getElementById('zoomControl').disabled = false;
+                        document.getElementById('moveUp').disabled = false;
+                        document.getElementById('moveLeft').disabled = false;
+                        document.getElementById('moveRight').disabled = false;
+                        document.getElementById('moveDown').disabled = false;
+                    }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
 			function reset() {
 				scale = 1;
@@ -217,14 +259,36 @@
                 ctx.translate(cw / 2, ch / 2);
                 ctx.scale(scaleFactor * scale, scaleFactor * scale);
                 ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), -ih / 2 + position.y / (scaleFactor * scale));
-                ctx.drawImage(image, 0, 0);
-                ctx.restore();
-                ctx.drawImage(twibbon, 0, 0, cw, ch);
 
-                if (isBlackAndWhite) {
-                    applyBlackAndWhiteFilter(ctx, cw, ch);
+                // Jika pilihan foto hitam putih atau semua hitam putih dipilih
+                if (document.getElementById('photoBnW').checked) {
+                    let tempCanvas = document.createElement('canvas');
+                    let tempCtx = tempCanvas.getContext('2d');
+                    tempCanvas.width = iw;
+                    tempCanvas.height = ih;
+                    tempCtx.drawImage(image, 0, 0);
+                    applyBlackAndWhiteFilter(tempCtx, iw, ih);
+                    ctx.drawImage(tempCanvas, 0, 0);
+                } else {
+                    ctx.drawImage(image, 0, 0);
+                }
+                
+                ctx.restore();
+
+                // Jika pilihan twibbon hitam putih atau semua hitam putih dipilih
+                if (document.getElementById('twibbonBnW').checked) {
+                    let tempCanvas = document.createElement('canvas');
+                    let tempCtx = tempCanvas.getContext('2d');
+                    tempCanvas.width = cw;
+                    tempCanvas.height = ch;
+                    tempCtx.drawImage(twibbon, 0, 0, cw, ch);
+                    applyBlackAndWhiteFilter(tempCtx, cw, ch);
+                    ctx.drawImage(tempCanvas, 0, 0, cw, ch);
+                } else {
+                    ctx.drawImage(twibbon, 0, 0, cw, ch);
                 }
             }
+
             function applyBlackAndWhiteFilter(ctx, width, height) {
                 let imageData = ctx.getImageData(0, 0, width, height);
                 let data = imageData.data;
@@ -266,37 +330,58 @@
 				dragStart = null;
 			}, false);
 			document.getElementById('saveImage').addEventListener('click', function() {
-                let hiddenCanvas = document.createElement('canvas');
-                hiddenCanvas.width = 1080;
-                hiddenCanvas.height = 1080;
-                let hiddenCtx = hiddenCanvas.getContext('2d');
-				// Adjust the scale to fit the twibbon size
-				let scaleFactor = Math.min(hiddenCanvas.width / image.width, hiddenCanvas.height / image.height);
-				// Draw the image and twibbon on the hidden canvas
-				hiddenCtx.save();
-				hiddenCtx.translate(hiddenCanvas.width / 2, hiddenCanvas.height / 2);
-				hiddenCtx.scale(scaleFactor * scale, scaleFactor * scale);
-				hiddenCtx.translate(-image.width / 2 + position.x / (scaleFactor * scale), -image.height / 2 + position.y / (scaleFactor * scale));
-				hiddenCtx.drawImage(image, 0, 0);
-				hiddenCtx.restore();
-				hiddenCtx.drawImage(twibbon, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+                if (image.src) {
+                    let hiddenCanvas = document.createElement('canvas');
+                    hiddenCanvas.width = 1080;
+                    hiddenCanvas.height = 1080;
+                    let hiddenCtx = hiddenCanvas.getContext('2d');
 
-                if (isBlackAndWhite) {
-                    applyBlackAndWhiteFilter(hiddenCtx, hiddenCanvas.width, hiddenCanvas.height);
+                    let scaleFactor = Math.min(hiddenCanvas.width / image.width, hiddenCanvas.height / image.height);
+                    hiddenCtx.save();
+                    hiddenCtx.translate(hiddenCanvas.width / 2, hiddenCanvas.height / 2);
+                    hiddenCtx.scale(scaleFactor * scale, scaleFactor * scale);
+                    hiddenCtx.translate(-image.width / 2 + position.x / (scaleFactor * scale), -image.height / 2 + position.y / (scaleFactor * scale));
+
+                    // Terapkan filter hitam putih pada foto jika dipilih
+                    if (document.getElementById('photoBnW').checked) {
+                        let tempCanvas = document.createElement('canvas');
+                        let tempCtx = tempCanvas.getContext('2d');
+                        tempCanvas.width = image.width;
+                        tempCanvas.height = image.height;
+                        tempCtx.drawImage(image, 0, 0);
+                        applyBlackAndWhiteFilter(tempCtx, image.width, image.height);
+                        hiddenCtx.drawImage(tempCanvas, 0, 0);
+                    } else {
+                        hiddenCtx.drawImage(image, 0, 0);
+                    }
+
+                    hiddenCtx.restore();
+
+                    // Terapkan filter hitam putih pada twibbon jika dipilih
+                    if (document.getElementById('twibbonBnW').checked) {
+                        let tempCanvas = document.createElement('canvas');
+                        let tempCtx = tempCanvas.getContext('2d');
+                        tempCanvas.width = hiddenCanvas.width;
+                        tempCanvas.height = hiddenCanvas.height;
+                        tempCtx.drawImage(twibbon, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+                        applyBlackAndWhiteFilter(tempCtx, hiddenCanvas.width, hiddenCanvas.height);
+                        hiddenCtx.drawImage(tempCanvas, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+                    } else {
+                        hiddenCtx.drawImage(twibbon, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+                    }
+
+                    // Buat data URL dan unduh
+                    let dataURL = hiddenCanvas.toDataURL('image/png');
+                    let link = document.createElement('a');
+                    link.download = 'JKT48-Flowerful-Twibbon_JKT48Live.png';
+                    link.href = dataURL;
+                    link.click();
                 }
-				// Create the data URL and download
-				let dataURL = hiddenCanvas.toDataURL('image/png');
-				let link = document.createElement('a');
-				link.download = 'JKT48-FLowerful-Twibbon_JKT48Live.png';
-				link.href = dataURL;
-				link.click();
-			});
+            });
 			$(window).resize(resizeCanvas);
 			resizeCanvas();
-            document.getElementById('toggleBnW').addEventListener('click', function() {
-                isBlackAndWhite = !isBlackAndWhite;
-                draw();
-            });
+            document.getElementById('photoBnW').addEventListener('change', draw);
+            document.getElementById('twibbonBnW').addEventListener('change', draw);
 		</script>
 	</body>
 </html>
