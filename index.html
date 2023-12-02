@@ -1,258 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JKT48 Flowerful Twibbon</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>JKT48 Flowerful Twibbon</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+		<!-- Standard SEO Meta Tags -->
+		<meta name="description" content="Make your JKT48 Flowerful Twibbon now.">
+		<meta name="keywords" content="JKT48, Flowerful, Twibbon">
+		<meta name="author" content="JKT48 Live">
+		<!-- Facebook Meta Tags -->
+		<meta property="og:url" content="https://jkt48live.github.io/tictactoe">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="JKT48 Flowerful Twibbon">
+		<meta property="og:description" content="Make your JKT48 Flowerful Twibbon now.">
+		<meta property="og:image" content="https://telegra.ph/file/6a977f02e153f6f214111.png">
+		<!-- Twitter Meta Tags -->
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:title" content="JKT48 Flowerful Twibbon">
+		<meta name="twitter:description" content="Make your JKT48 Flowerful Twibbon now.">
+		<meta name="twitter:image" content="https://telegra.ph/file/6a977f02e153f6f214111.png">
+		<meta name="twitter:site" content="@JKT48LiveX">
+		<meta name="twitter:creator" content="@JKT48LiveX">
+		<link rel="icon" type="image/x-icon" href="https://telegra.ph/file/b6d02b1228c27548bd4cc.png">
+		<style>
+			#canvasContainer {
+				width: 100%;
+				max-width: 500px;
+				/* Maximum size */
+				margin: auto;
+				border: 1px solid #ddd;
+				position: relative;
+				overflow: hidden;
+			}
 
-    <!-- Standard SEO Meta Tags -->
-    <meta name="description" content="Make your JKT48 Flowerful Twibbon now.">
-    <meta name="keywords" content="JKT48, Flowerful, Twibbon">
-    <meta name="author" content="JKT48 Live">
-    <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://jkt48live.github.io/tictactoe">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="JKT48 Flowerful Twibbon">
-    <meta property="og:description" content="Make your JKT48 Flowerful Twibbon now.">
-    <meta property="og:image" content="https://telegra.ph/file/6a977f02e153f6f214111.png">
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="JKT48 Flowerful Twibbon">
-    <meta name="twitter:description" content="Make your JKT48 Flowerful Twibbon now.">
-    <meta name="twitter:image" content="https://telegra.ph/file/6a977f02e153f6f214111.png">
-    <meta name="twitter:site" content="@JKT48LiveX">
-    <meta name="twitter:creator" content="@JKT48LiveX">
-    <link rel="icon" type="image/x-icon" href="https://telegra.ph/file/b6d02b1228c27548bd4cc.png">
-    <style>
-      #canvasContainer {
-        width: 100%;
-        max-width: 500px;
-        /* Maximum size */
-        margin: auto;
-        border: 1px solid #ddd;
-        position: relative;
-        overflow: hidden;
-      }
+			canvas {
+				width: 100%;
+				height: auto;
+			}
 
-      canvas {
-        width: 100%;
-        height: auto;
-      }
+			.joystick-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
 
-      .joystick-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
+			.joystick-row {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
 
-      .joystick-row {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+			.joystick-btn {
+				margin: 3px;
+				width: 30px;
+				height: 30px;
+			}
 
-      .joystick-btn {
-        margin: 3px;
-        width: 30px;
-        height: 30px;
-      }
+			.joystick-spacer {
+				width: 30px;
+				height: 30px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
 
-      .joystick-spacer {
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+			.controls-container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
 
-      .controls-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+			.slider-container {
+				margin-right: 30px;
+			}
 
-      .slider-container {
-        margin-right: 30px;
-      }
+			#saveImage {
+				display: block;
+				margin: 20px auto;
+			}
 
-      #saveImage {
-        display: block;
-        margin: 20px auto;
-      }
-      .poppins-font {
-        font-family: 'Poppins', sans-serif;
-      }
-      footer {
-        padding: 5px 0;
-        background-color: #f8f9fa;
-        color: #6c757d;
-        border-top: 1px solid #e9ecef;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        text-align: center;
-        font-size: 0.9em;
-        font-size: 0.8em;
-        font-weight: normal;
-      }
-    </style>
-  </head>
-  <body class="poppins-font">
-    <div class="container mt-5">
-      <h2 class="mb-4 text-center">JKT48 Flowerful Twibbon</h2>
-      <div class="custom-file mb-3">
-        <input type="file" class="custom-file-input" id="imageUpload" accept="image/*">
-        <label class="custom-file-label" for="imageUpload">Pilih foto...</label>
-      </div>
-      <div id="canvasContainer">
-        <canvas id="canvas"></canvas>
-      </div>
-      <div class="container mt-5">
-        <div class="controls-container">
-          <div class="slider-container">
-            <label for="zoomControl">Zoom:</label>
-            <input type="range" id="zoomControl" min="0.1" max="2" value="1" step="0.1">
-          </div>
-          <div class="joystick-container">
-            <div class="joystick-row">
-              <div class="joystick-spacer"></div>
-              <button id="moveUp" class="btn btn-primary">↑</button>
-              <div class="joystick-spacer"></div>
-            </div>
-            <div class="joystick-row">
-              <button id="moveLeft" class="btn btn-primary">←</button>
-              <div class="joystick-spacer"></div>
-              <button id="moveRight" class="btn btn-primary">→</button>
-            </div>
-            <div class="joystick-row">
-              <div class="joystick-spacer"></div>
-              <button id="moveDown" class="btn btn-primary">↓</button>
-              <div class="joystick-spacer"></div>
-            </div>
-          </div>
-        </div>
-        <!-- Other content goes here... -->
-      </div>
-      <div class="text-center">
-        <button class="btn btn-primary" id="saveImage">Download</button>
-      </div>
-    </div>
-    <footer class="text-center mt-4">
-      <p>Made with ❤️ by JKT48 Live</p>
-    </footer>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script>
-      let canvas = document.getElementById('canvas');
-      let ctx = canvas.getContext('2d');
-      let image = new Image();
-      let twibbon = new Image();
-      let scale = 1;
-      let position = {
-        x: 0,
-        y: 0
-      };
-      let dragStart, dragged;
-      let MOVE_AMOUNT = 10;
-      document.getElementById('moveLeft').addEventListener('click', function() {
-        position.x -= MOVE_AMOUNT;
-        draw();
-      });
-      document.getElementById('moveRight').addEventListener('click', function() {
-        position.x += MOVE_AMOUNT;
-        draw();
-      });
-      document.getElementById('moveUp').addEventListener('click', function() {
-        position.y -= MOVE_AMOUNT;
-        draw();
-      });
-      document.getElementById('moveDown').addEventListener('click', function() {
-        position.y += MOVE_AMOUNT;
-        draw();
-      });
-      twibbon.src = 'twibbon.png';
-      twibbon.onload = function() {
-        draw();
-      };
-      $('#imageUpload').change(function(e) {
-        let file = e.target.files[0];
-        if (file) {
-          let reader = new FileReader();
-          reader.onload = function(event) {
-            image.src = event.target.result;
-            image.onload = function() {
-              reset();
-              draw();
-            }
-          };
-          reader.readAsDataURL(file);
-        }
-      });
+			.poppins-font {
+				font-family: 'Poppins', sans-serif;
+			}
 
-      function reset() {
-        scale = 1;
-        position = {
-          x: 0,
-          y: 0
-        };
-      }
+			footer {
+				padding: 5px 0;
+				background-color: #f8f9fa;
+				color: #6c757d;
+				border-top: 1px solid #e9ecef;
+				position: fixed;
+				bottom: 0;
+				width: 100%;
+				text-align: center;
+				font-size: 0.9em;
+				font-size: 0.8em;
+				font-weight: normal;
+			}
+		</style>
+	</head>
+	<body class="poppins-font">
+		<div class="container mt-5">
+			<h2 class="mb-4 text-center">JKT48 Flowerful Twibbon</h2>
+			<div class="custom-file mb-3">
+				<input type="file" class="custom-file-input" id="imageUpload" accept="image/*">
+				<label class="custom-file-label" for="imageUpload">Pilih foto...</label>
+			</div>
+			<div id="canvasContainer">
+				<canvas id="canvas"></canvas>
+			</div>
+			<div class="container mt-5">
+				<div class="controls-container">
+					<div class="slider-container">
+						<label for="zoomControl">Zoom:</label>
+						<input type="range" id="zoomControl" min="0.1" max="2" value="1" step="0.1">
+					</div>
+					<div class="joystick-container">
+						<div class="joystick-row">
+							<div class="joystick-spacer"></div>
+							<button id="moveUp" class="btn btn-primary">↑</button>
+							<div class="joystick-spacer"></div>
+						</div>
+						<div class="joystick-row">
+							<button id="moveLeft" class="btn btn-primary">←</button>
+							<div class="joystick-spacer"></div>
+							<button id="moveRight" class="btn btn-primary">→</button>
+						</div>
+						<div class="joystick-row">
+							<div class="joystick-spacer"></div>
+							<button id="moveDown" class="btn btn-primary">↓</button>
+							<div class="joystick-spacer"></div>
+						</div>
+					</div>
+				</div>
+				<!-- Other content goes here... -->
+			</div>
+			<div class="text-center">
+				<button class="btn btn-primary" id="saveImage">Download</button>
+			</div>
+		</div>
+		<footer class="text-center mt-4">
+			<p>Made with ❤️ by JKT48 Live</p>
+		</footer>
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+		<script>
+			let canvas = document.getElementById('canvas');
+			let ctx = canvas.getContext('2d');
+			let image = new Image();
+			let twibbon = new Image();
+			let scale = 1;
+			let position = {
+				x: 0,
+				y: 0
+			};
+			let dragStart, dragged;
+			let MOVE_AMOUNT = 10;
+			document.getElementById('moveLeft').addEventListener('click', function() {
+				position.x -= MOVE_AMOUNT;
+				draw();
+			});
+			document.getElementById('moveRight').addEventListener('click', function() {
+				position.x += MOVE_AMOUNT;
+				draw();
+			});
+			document.getElementById('moveUp').addEventListener('click', function() {
+				position.y -= MOVE_AMOUNT;
+				draw();
+			});
+			document.getElementById('moveDown').addEventListener('click', function() {
+				position.y += MOVE_AMOUNT;
+				draw();
+			});
+			twibbon.src = 'twibbon.png';
+			twibbon.onload = function() {
+				draw();
+			};
+			$('#imageUpload').change(function(e) {
+				let file = e.target.files[0];
+				if (file) {
+					let reader = new FileReader();
+					reader.onload = function(event) {
+						image.src = event.target.result;
+						image.onload = function() {
+							reset();
+							draw();
+						}
+					};
+					reader.readAsDataURL(file);
+				}
+			});
 
-      function draw() {
-        let iw = image.width;
-        let ih = image.height;
-        let cw = canvas.width;
-        let ch = canvas.height;
-        let scaleFactor = Math.min(cw / iw, ch / ih);
-        let iwScaled = iw * scaleFactor * scale;
-        let ihScaled = ih * scaleFactor * scale;
-        ctx.clearRect(0, 0, cw, ch);
-        ctx.save();
-        ctx.translate(cw / 2, ch / 2);
-        ctx.scale(scaleFactor * scale, scaleFactor * scale);
-        ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), -ih / 2 + position.y / (scaleFactor * scale));
-        ctx.drawImage(image, 0, 0);
-        ctx.restore();
-        ctx.drawImage(twibbon, 0, 0, cw, ch);
-      }
+			function reset() {
+				scale = 1;
+				position = {
+					x: 0,
+					y: 0
+				};
+			}
 
-      function resizeCanvas() {
-        canvas.width = $('#canvasContainer').width();
-        canvas.height = canvas.width;
-        draw();
-      }
-      $('#zoomControl').on('input', function() {
-        scale = parseFloat($(this).val());
-        draw();
-      });
-      canvas.addEventListener('mousedown', function(evt) {
-        dragStart = {
-          x: evt.offsetX - position.x,
-          y: evt.offsetY - position.y
-        };
-        dragged = false;
-      }, false);
-      canvas.addEventListener('mousemove', function(evt) {
-        if (dragStart) {
-          position.x = evt.offsetX - dragStart.x;
-          position.y = evt.offsetY - dragStart.y;
-          draw();
-          dragged = true;
-        }
-      }, false);
-      canvas.addEventListener('mouseup', function(evt) {
-        dragStart = null;
-      }, false);
-      document.getElementById('saveImage').addEventListener('click', function() {
-        let dataURL = canvas.toDataURL('image/png');
-        let link = document.createElement('a');
-        link.download = 'JKT48-FLowerful-Twibbon_JKT48Live.png';
-        link.href = dataURL;
-        link.click();
-      });
-      $(window).resize(resizeCanvas);
-      resizeCanvas();
-    </script>
-  </body>
+			function draw() {
+				let iw = image.width;
+				let ih = image.height;
+				let cw = canvas.width;
+				let ch = canvas.height;
+				let scaleFactor = Math.min(cw / iw, ch / ih);
+				let iwScaled = iw * scaleFactor * scale;
+				let ihScaled = ih * scaleFactor * scale;
+				ctx.clearRect(0, 0, cw, ch);
+				ctx.save();
+				ctx.translate(cw / 2, ch / 2);
+				ctx.scale(scaleFactor * scale, scaleFactor * scale);
+				ctx.translate(-iw / 2 + position.x / (scaleFactor * scale), -ih / 2 + position.y / (scaleFactor * scale));
+				ctx.drawImage(image, 0, 0);
+				ctx.restore();
+				ctx.drawImage(twibbon, 0, 0, cw, ch);
+			}
+
+			function resizeCanvas() {
+				canvas.width = $('#canvasContainer').width();
+				canvas.height = canvas.width;
+				draw();
+			}
+			$('#zoomControl').on('input', function() {
+				scale = parseFloat($(this).val());
+				draw();
+			});
+			canvas.addEventListener('mousedown', function(evt) {
+				dragStart = {
+					x: evt.offsetX - position.x,
+					y: evt.offsetY - position.y
+				};
+				dragged = false;
+			}, false);
+			canvas.addEventListener('mousemove', function(evt) {
+				if (dragStart) {
+					position.x = evt.offsetX - dragStart.x;
+					position.y = evt.offsetY - dragStart.y;
+					draw();
+					dragged = true;
+				}
+			}, false);
+			canvas.addEventListener('mouseup', function(evt) {
+				dragStart = null;
+			}, false);
+			document.getElementById('saveImage').addEventListener('click', function() {
+				let hiddenCanvas = document.createElement('canvas');
+				hiddenCanvas.width = 1080; // Width of the output image
+				hiddenCanvas.height = 1080; // Height of the output image
+				let hiddenCtx = hiddenCanvas.getContext('2d');
+				// Adjust the scale to fit the twibbon size
+				let scaleFactor = Math.min(hiddenCanvas.width / image.width, hiddenCanvas.height / image.height);
+				// Draw the image and twibbon on the hidden canvas
+				hiddenCtx.save();
+				hiddenCtx.translate(hiddenCanvas.width / 2, hiddenCanvas.height / 2);
+				hiddenCtx.scale(scaleFactor * scale, scaleFactor * scale);
+				hiddenCtx.translate(-image.width / 2 + position.x / (scaleFactor * scale), -image.height / 2 + position.y / (scaleFactor * scale));
+				hiddenCtx.drawImage(image, 0, 0);
+				hiddenCtx.restore();
+				hiddenCtx.drawImage(twibbon, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+				// Create the data URL and download
+				let dataURL = hiddenCanvas.toDataURL('image/png');
+				let link = document.createElement('a');
+				link.download = 'JKT48-FLowerful-Twibbon_JKT48Live.png';
+				link.href = dataURL;
+				link.click();
+			});
+			$(window).resize(resizeCanvas);
+			resizeCanvas();
+		</script>
+	</body>
 </html>
